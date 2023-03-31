@@ -44,10 +44,10 @@ void FunctionGraphWindow::drawXyAxis()
     int xStrWidth, xStrHeight;
     const char *xAxisText = "X";
     fl_measure(xAxisText, xStrWidth, xStrHeight);
-    if (origin.y < h()/2)
-      fl_draw(xAxisText, w() - xStrWidth - 5, origin.y + 5);
+    if (origin.y < h() / 2)
+      fl_draw(xAxisText, w() - xStrWidth - 5, origin.y + xStrHeight + 5);
     else
-      fl_draw(xAxisText, w() - xStrWidth - 5, origin.y - 5);
+      fl_draw(xAxisText, w() - xStrWidth - 5, origin.y - xStrHeight - 5);
   }
 
   //drawing Y axis
