@@ -25,6 +25,33 @@ void FunctionGraphWindow::draw()
   //drawFunction();
 }
 
+int FunctionGraphWindow::handle(int e)
+{
+  int ret = Fl_Double_Window::handle(e);
+  static int x;
+  static int y;
+  switch (e)
+  {
+  case FL_PUSH:
+    x = Fl::event_x();
+    y = Fl::event_y();
+    break;
+  case FL_DRAG:
+    std::cout << "DRAG " << Fl::event_x() << " " << Fl::event_y() << '\n';
+    double dx = (Fl::event_x() - x) / 200.;
+    double dy = (Fl::event_y() - y) / 200.;
+    xLeft -= dx;
+    xRight -= dx;
+    yLow += dy;
+    yHigh += dy;
+    x = Fl::event_x();
+    y = Fl::event_y();
+    redraw();
+    break;
+  }
+  return ret;
+}
+
 void FunctionGraphWindow::drawXyAxis()
 {
   Fl_Font xyFont = FL_TIMES | FL_BOLD;
