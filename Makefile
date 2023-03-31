@@ -24,5 +24,5 @@ main.o: main.cpp
 				$(CXX) $(CXXFLAGS) $(DEBUG) -c $<
  
 clean:
-				rm -f *.o 2> /dev/null
+				rm -f *.o *.gch 2> /dev/null
 				rm -f $(TARGET) 2> /dev/null
