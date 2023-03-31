@@ -15,13 +15,15 @@ public:
     int x, y;
   };
 private:
-  double xLeft = -3;
-  double xRight = 1;
-  double yLow = 1;
-  double yHigh = 2;
+  double xLeft = 1;
+  double xRight = 3;
+  double yLow = -3;
+  double yHigh = -1;
   void drawXyAxis();
-  void drawUnitInterval();
+  void drawXUnitInterval();
+  //void drawYUnitInterval();
   Pixel getOrigin();
+  bool isYAxisInUpperHalf();
   //void drawFunction();
 };
 #endif
