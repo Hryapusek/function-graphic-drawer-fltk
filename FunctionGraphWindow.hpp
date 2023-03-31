@@ -10,6 +10,7 @@ class FunctionGraphWindow: public Fl_Double_Window
 public:
   FunctionGraphWindow(double (*f)(double));
   void draw();
+  int handle(int e);
   struct Pixel
   {
     int x, y;
