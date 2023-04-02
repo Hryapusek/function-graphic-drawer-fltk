@@ -20,11 +20,13 @@ private:
   double xRight = -1;
   double yLow = -1;
   double yHigh = 1;
+  double (*f)(double);
   void drawXyAxis();
   void drawXUnitInterval();
-  //void drawYUnitInterval();
+  void drawYUnitInterval();
   Pixel getOrigin();
-  inline bool isYAxisInUpperHalf();
+  inline bool isXAxisInUpperHalf();
+  inline bool isYAxisInLeftHalf();
   //void drawFunction();
 };
 #endif
