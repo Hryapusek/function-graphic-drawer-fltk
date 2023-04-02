@@ -16,8 +16,8 @@ public:
     int x, y;
   };
 private:
-  double xLeft = -3;
-  double xRight = -1;
+  double xLeft = -1;
+  double xRight = 1;
   double yLow = -1;
   double yHigh = 1;
   double (*f)(double);
@@ -27,6 +27,7 @@ private:
   Pixel getOrigin();
   inline bool isXAxisInUpperHalf();
   inline bool isYAxisInLeftHalf();
-  //void drawFunction();
+  void drawFunction();
+  void drawLines();
 };
 #endif
