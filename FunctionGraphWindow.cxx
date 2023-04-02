@@ -24,7 +24,8 @@ void FunctionGraphWindow::draw()
   drawXyAxis();
   drawXUnitInterval();
   drawYUnitInterval();
-  //drawFunction();
+  drawFunction();
+  drawLines();
 }
 
 int FunctionGraphWindow::handle(int e)
@@ -39,7 +40,7 @@ int FunctionGraphWindow::handle(int e)
     y = Fl::event_y();
     break;
   case FL_DRAG:
-    double dx = (Fl::event_x() - x) / (w() / 3.);
+  { double dx = (Fl::event_x() - x) / (w() / 3.);
     double dy = (Fl::event_y() - y) / (h() / 3.);
     xLeft -= dx;
     xRight -= dx;
@@ -47,6 +48,9 @@ int FunctionGraphWindow::handle(int e)
     yHigh += dy;
     x = Fl::event_x();
     y = Fl::event_y();
+    redraw();
+    break; }
+  case FL_MOVE:
     redraw();
     break;
   }
@@ -307,5 +311,31 @@ inline bool FunctionGraphWindow::isYAxisInLeftHalf()
   return getOrigin().x <= w() / 2;;
 }
 
-/*void FunctionGraphWindow::drawFunction()
-   { }*/
+void FunctionGraphWindow::drawFunction()
+{
+  Pixel origin = getOrigin();
+  const double xValueOnPixel = (xRight - xLeft) / w();
+  const double yValueOnPixel = (yHigh - yLow) / h();
+  int lineWidth = 3;
+  int lineStyle = FL_SOLID;
+  Fl_Color lineColor = FL_GREEN;
+  fl_line_style(lineStyle, lineWidth);
+  fl_color(lineColor);
+  fl_begin_line();
+  for (int i = 0; i <= w(); ++i)
+  {
+    fl_vertex(i, origin.y - (f(xLeft + xValueOnPixel * i) + ((yLow >= 0) ? -yLow:0) + (yHigh <= 0 ? -yHigh:0)) / yValueOnPixel);
+  }
+  fl_end_line();
+}
+
+void FunctionGraphWindow::drawLines()
+{
+  int lineWidth = 3;
+  int lineStyle = FL_SOLID;
+  Fl_Color lineColor = FL_GRAY;
+  fl_line_style(lineStyle, lineWidth);
+  fl_color(lineColor);
+  fl_xyline(getOrigin().x, Fl::event_y(), Fl::event_x());
+  fl_yxline(Fl::event_x(), getOrigin().y, Fl::event_y());
+}
