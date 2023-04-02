@@ -37,7 +37,6 @@ int FunctionGraphWindow::handle(int e)
     y = Fl::event_y();
     break;
   case FL_DRAG:
-    std::cout << "DRAG " << Fl::event_x() << " " << Fl::event_y() << '\n';
     double dx = (Fl::event_x() - x) / 200.;
     double dy = (Fl::event_y() - y) / 200.;
     xLeft -= dx;
@@ -99,39 +98,34 @@ void FunctionGraphWindow::drawXyAxis()
 void FunctionGraphWindow::drawXUnitInterval()
 {
   Pixel origin = getOrigin();
-  int nUnits = 12;
-  int nNegUnits = (double)origin.x / w() * nUnits;
-  int nPosUnits = nUnits - nNegUnits;
+  const int stepWidth = 60;
+  const double valueOnPixel = (xRight - xLeft) / w();
+  const double step = stepWidth * valueOnPixel;
   int lineWidth = 2;
   int lineStyle = FL_SOLID;
   Fl_Color lineColor = FL_WHITE;
   int lineLengthHalf = 6;
   int yUpperBound = origin.y - lineLengthHalf;
   int yLowerBound = origin.y + lineLengthHalf;
-  if (nPosUnits != 0) //place only positive unit intervals
-  {
-    //width in pixels of single unit interval;
-    int stepInPixels = (w() - origin.x - 10) / nPosUnits;
-    //value of single unit interval
-    double stepValue = (xRight - std::max(0., xLeft)) / nPosUnits;
-    int firstUnitOffset;
-    double firstUnitVal;
+  if (xRight > 0)
+  { //positive half
+    int unitOffset;
+    double unitValue;
     if (xLeft <= 0)
     {
-      firstUnitOffset = origin.x + stepInPixels;
-      firstUnitVal = stepValue;
+      unitOffset = origin.x + stepWidth;
+      unitValue = step;
     }
     else
     {
-      firstUnitOffset = (1 - std::fmod(xLeft, stepValue) / stepValue) * stepInPixels;
-      firstUnitVal = xLeft + (1 - std::fmod(xLeft, stepValue) / stepValue) * stepValue;
+      unitOffset = (1 - std::fmod(xLeft, step) / step) * stepWidth;
+      unitValue = xLeft + (1 - std::fmod(xLeft, step) / step) * step;
     }
-    for (int i = 0; i < nPosUnits; ++i)
+    for (; unitOffset < w(); unitOffset += stepWidth)
     {
-      int curUnitOffset = firstUnitOffset + i * stepInPixels;
       fl_line_style(lineStyle, lineWidth);
       fl_color(lineColor);
-      fl_yxline(curUnitOffset, yUpperBound, yLowerBound);
+      fl_yxline(unitOffset, yUpperBound, yLowerBound);
       {
         Fl_Font font = FL_TIMES;
         int fontSize = 16;
@@ -139,15 +133,54 @@ void FunctionGraphWindow::drawXUnitInterval()
         fl_font(font, fontSize);
         fl_color(fontColor);
         int strWidth, strHeight;
-        std::string posUnitValue = std::to_string(round((firstUnitVal + stepValue * i) * 100.) / 100.);
+        std::string posUnitValue = std::to_string(round((unitValue) * 100.) / 100.);
         posUnitValue.erase(posUnitValue.find_last_not_of('0') + 1, std::string::npos );
         posUnitValue.erase(posUnitValue.find_last_not_of('.') + 1, std::string::npos );
         fl_measure(posUnitValue.c_str(), strWidth, strHeight);
         if (isYAxisInUpperHalf())
-          fl_draw(posUnitValue.c_str(), curUnitOffset - strWidth / 2., yLowerBound + strHeight);
+          fl_draw(posUnitValue.c_str(), unitOffset - strWidth / 2., yLowerBound + strHeight);
         else
-          fl_draw(posUnitValue.c_str(), curUnitOffset - strWidth / 2., yUpperBound - strHeight);
+          fl_draw(posUnitValue.c_str(), unitOffset - strWidth / 2., yUpperBound - strHeight);
       }
+      unitValue += step;
+    }
+  }
+  if (xLeft < 0)
+  { //negative half
+    int unitOffset;
+    double unitValue;
+    if (xRight >= 0)
+    {
+      unitOffset = origin.x - stepWidth;
+      unitValue = -step;
+    }
+    else
+    {
+      unitOffset = w() + (-step - std::fmod(xRight, step)) / step * stepWidth;
+      unitValue = xRight - step - std::fmod(xRight, step);
+    }
+    for (; unitOffset > 0; unitOffset -= stepWidth)
+    {
+      fl_line_style(lineStyle, lineWidth);
+      fl_color(lineColor);
+      fl_yxline(unitOffset, yUpperBound, yLowerBound);
+      {
+        Fl_Font font = FL_TIMES;
+        int fontSize = 16;
+        Fl_Color fontColor = FL_WHITE;
+        fl_font(font, fontSize);
+        fl_color(fontColor);
+        int strWidth, strHeight;
+        std::string strUnitValue = std::to_string(round((unitValue) * 100.) / 100.);
+        strUnitValue.erase(strUnitValue.find_last_not_of('0') + 1, std::string::npos );
+        strUnitValue.erase(strUnitValue.find_last_not_of('.') + 1, std::string::npos );
+        fl_measure(strUnitValue.c_str(), strWidth, strHeight);
+        if (isYAxisInUpperHalf())
+          fl_draw(strUnitValue.c_str(), unitOffset - strWidth / 2., yLowerBound + strHeight);
+        else
+          fl_draw(strUnitValue.c_str(), unitOffset - strWidth / 2., yUpperBound - strHeight);
+      }
+      unitValue -= step;
     }
   }
 }
@@ -171,7 +204,7 @@ FunctionGraphWindow::Pixel FunctionGraphWindow::getOrigin()
   return { x, y };
 }
 
-bool FunctionGraphWindow::isYAxisInUpperHalf()
+inline bool FunctionGraphWindow::isYAxisInUpperHalf()
 {
   return getOrigin().y <= h() / 2;
 }
