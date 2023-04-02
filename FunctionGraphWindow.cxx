@@ -7,7 +7,7 @@
 #include <functional>
 
 FunctionGraphWindow::FunctionGraphWindow(double (*f)(double))
-  : Fl_Double_Window(600, 600) {
+  : Fl_Double_Window(600, 600), f(f) {
   Fl_Double_Window::box(FL_BORDER_BOX);
   Fl_Double_Window::color(FL_BLACK);
   Fl_Double_Window::labelfont(1);
