@@ -16,15 +16,15 @@ public:
     int x, y;
   };
 private:
-  double xLeft = 1;
-  double xRight = 3;
-  double yLow = -3;
-  double yHigh = -1;
+  double xLeft = -3;
+  double xRight = -1;
+  double yLow = -1;
+  double yHigh = 1;
   void drawXyAxis();
   void drawXUnitInterval();
   //void drawYUnitInterval();
   Pixel getOrigin();
-  bool isYAxisInUpperHalf();
+  inline bool isYAxisInUpperHalf();
   //void drawFunction();
 };
 #endif
