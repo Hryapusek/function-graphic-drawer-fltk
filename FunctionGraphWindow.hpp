@@ -10,18 +10,24 @@ class FunctionGraphWindow: public Fl_Double_Window
 public:
   FunctionGraphWindow(double (*f)(double));
   void draw();
+  int handle(int e);
   struct Pixel
   {
     int x, y;
   };
 private:
-  double xLeft = -3;
+  double xLeft = -1;
   double xRight = 1;
-  double yLow = 1;
-  double yHigh = 2;
+  double yLow = -1;
+  double yHigh = 1;
+  double (*f)(double);
   void drawXyAxis();
-  void drawUnitInterval();
+  void drawXUnitInterval();
+  void drawYUnitInterval();
   Pixel getOrigin();
-  //void drawFunction();
+  inline bool isXAxisInUpperHalf();
+  inline bool isYAxisInLeftHalf();
+  void drawFunction();
+  void drawLines();
 };
 #endif
