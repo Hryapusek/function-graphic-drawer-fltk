@@ -2,7 +2,7 @@
 
 double f(double x)
 {
-  return x*x*x;
+  return 1/x;
 }
 
 int main()
