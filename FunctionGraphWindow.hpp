@@ -24,10 +24,10 @@ private:
   void drawXyAxis();
   void drawXUnitInterval();
   void drawYUnitInterval();
+  void drawFunction();
+  void drawLines();
   Pixel getOrigin();
   inline bool isXAxisInUpperHalf();
   inline bool isYAxisInLeftHalf();
-  void drawFunction();
-  void drawLines();
 };
 #endif
