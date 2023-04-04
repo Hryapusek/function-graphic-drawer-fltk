@@ -40,8 +40,10 @@ int FunctionGraphWindow::handle(int e)
     y = Fl::event_y();
     break;
   case FL_DRAG:
-  { double dx = (Fl::event_x() - x) / (w() / 3.);
-    double dy = (Fl::event_y() - y) / (h() / 3.);
+  { const double xValueOnPixel = (xRight - xLeft) / w();
+    const double yValueOnPixel = (yHigh - yLow) / h();
+    double dx = (Fl::event_x() - x) * xValueOnPixel;
+    double dy = (Fl::event_y() - y) * yValueOnPixel;
     xLeft -= dx;
     xRight -= dx;
     yLow += dy;
